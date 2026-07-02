@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="NOAH Reading">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="NOAH Reading">
+  <meta name="description" content="NOAH'S Reading Adventure - 500 word English and Filipino reading practice.">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#fff8eb">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <title>NOAH'S Reading Adventure</title>
+  <meta name="noah-build" content="pwa-v5-500-words-text-filipino">
   <style>
     :root { --blue:#2f80ed; --dark:#223; --purple:#5a3370; --gold:#b57900; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -36,7 +42,7 @@
     .modal h3 { margin:6px 0 14px; font-size:26px; }
     .modal button { margin-top:10px; }
     .small { font-size:14px; color:#666; line-height:1.35; max-width:430px; }
-    .voiceNote { font-size:13px; color:#5a3370; margin-top:6px; font-weight:700; }
+    .pwaNote { font-size:13px; color:#6b4b8a; font-weight:700; margin-top:4px; max-width:520px; }
     @media (max-width: 380px) { .word{font-size:45px} .sentence{font-size:19px} h1{font-size:46px} }
   </style>
 </head>
@@ -59,10 +65,10 @@
       <div class="sentence" id="enSentence"></div>
       <div class="sentence" id="filSentence"></div>
       <div class="stars" id="stars"></div>
-      <div class="voiceNote" id="voiceNote">Filipino voice uses Wi‑Fi for better pronunciation.</div>
     </section>
-    <div class="row"><button id="speakEn">Speak English</button><button id="speakFil" class="secondary">Speak Filipino</button></div>
-    <div class="row"><button id="hintBtn" class="light">Hint</button><button id="nextBtn">Next</button></div>
+    <div class="row"><button id="speakEn">🔊 English Voice</button><button id="hintBtn" class="light">Hint</button></div>
+    <button id="nextBtn">Next Word</button>
+    <div class="pwaNote">Filipino is shown clearly in big text. Filipino audio is disabled to avoid wrong iPad pronunciation.</div>
   </main>
 
   <div class="modalBack" id="modalBack">
@@ -104,24 +110,13 @@ function showWord(newBg) {
   $('hintBtn').textContent = hintShown ? 'Hide Hint' : 'Hint';
   save();
 }
-let currentAudio = null;
 function speak(text, lang) {
   if(!soundEnabled || !('speechSynthesis' in window)) return;
-  try { if(currentAudio) { currentAudio.pause(); currentAudio = null; } } catch(e) {}
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = lang;
   u.rate = 0.82;
   speechSynthesis.speak(u);
-}
-function speakFilipinoOnline(text) {
-  if(!soundEnabled) return;
-  try { speechSynthesis.cancel(); } catch(e) {}
-  try { if(currentAudio) currentAudio.pause(); } catch(e) {}
-  const url = 'https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=tl&q=' + encodeURIComponent(text);
-  currentAudio = new Audio(url);
-  currentAudio.preload = 'auto';
-  currentAudio.play().catch(() => speak(text, 'en-US'));
 }
 function nextWord() { stars++; speak(praise[Math.floor(Math.random()*praise.length)], 'en-US'); index++; if(index>=words.length) index=0; hintShown=false; showWord(true); }
 function openSettings() { $('soundBtn').textContent = soundEnabled ? 'Disable Sounds' : 'Enable Sounds'; $('modalBack').style.display='flex'; }
@@ -131,16 +126,16 @@ $('continueBtn').onclick = showReading;
 $('settingsHomeBtn').onclick = openSettings;
 $('settingsBtn').onclick = openSettings;
 $('homeBtn').onclick = showHome;
-$('soundBtn').onclick = () => { soundEnabled=!soundEnabled; save(); try { if(currentAudio) currentAudio.pause(); speechSynthesis.cancel(); } catch(e) {} openSettings(); };
+$('soundBtn').onclick = () => { soundEnabled=!soundEnabled; save(); openSettings(); };
 $('resetBtn').onclick = () => { if(confirm('Reset Noah’s progress?')) { index=0; stars=0; hintShown=false; save(); updateHome(); showWord(false); closeSettings(); } };
 $('closeBtn').onclick = closeSettings;
 $('modalBack').onclick = e => { if(e.target.id === 'modalBack') closeSettings(); };
 $('speakEn').onclick = () => { const w=words[index]; speak(w.en + '. ' + w.enSentence, 'en-US'); };
-$('speakFil').onclick = () => { const w=words[index]; speakFilipinoOnline(w.fil + '. ' + w.filSentence); };
+$('speakFil').onclick = () => { const w=words[index]; speak(w.fil + '. ' + w.filSentence, 'fil-PH'); };
 $('hintBtn').onclick = () => { hintShown=!hintShown; showWord(false); };
 $('nextBtn').onclick = nextWord;
 
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').then(reg => { reg.update(); }).catch(()=>{}); }
 updateHome();
 </script>
 </body>
