@@ -1,0 +1,9 @@
+{
+  "name": "NOAH'S Reading Adventure",
+  "short_name": "NOAH Reading",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff8eb",
+  "theme_color": "#fff8eb",
+  "icons": []
+}
