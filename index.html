@@ -5,16 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="NOAH Reading">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="application-name" content="NOAH Reading">
-  <meta name="description" content="NOAH'S Reading Adventure - 500 word English and Filipino reading practice.">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#fff8eb">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icons/icon-180.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
   <title>NOAH'S Reading Adventure</title>
-  <meta name="noah-build" content="pwa-v5-500-words-text-filipino">
   <style>
     :root { --blue:#2f80ed; --dark:#223; --purple:#5a3370; --gold:#b57900; }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -42,7 +36,6 @@
     .modal h3 { margin:6px 0 14px; font-size:26px; }
     .modal button { margin-top:10px; }
     .small { font-size:14px; color:#666; line-height:1.35; max-width:430px; }
-    .pwaNote { font-size:13px; color:#6b4b8a; font-weight:700; margin-top:4px; max-width:520px; }
     @media (max-width: 380px) { .word{font-size:45px} .sentence{font-size:19px} h1{font-size:46px} }
   </style>
 </head>
@@ -66,9 +59,8 @@
       <div class="sentence" id="filSentence"></div>
       <div class="stars" id="stars"></div>
     </section>
-    <div class="row"><button id="speakEn">🔊 English Voice</button><button id="hintBtn" class="light">Hint</button></div>
-    <button id="nextBtn">Next Word</button>
-    <div class="pwaNote">Filipino is shown clearly in big text. Filipino audio is disabled to avoid wrong iPad pronunciation.</div>
+    <div class="row"><button id="speakEn">Speak English</button><button id="speakFil" class="secondary">Speak Filipino</button></div>
+    <div class="row"><button id="hintBtn" class="light">Hint</button><button id="nextBtn">Next</button></div>
   </main>
 
   <div class="modalBack" id="modalBack">
@@ -135,7 +127,7 @@ $('speakFil').onclick = () => { const w=words[index]; speak(w.fil + '. ' + w.fil
 $('hintBtn').onclick = () => { hintShown=!hintShown; showWord(false); };
 $('nextBtn').onclick = nextWord;
 
-if('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js').then(reg => { reg.update(); }).catch(()=>{}); }
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 updateHome();
 </script>
 </body>

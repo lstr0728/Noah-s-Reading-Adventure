@@ -1,15 +1,9 @@
 {
   "name": "NOAH'S Reading Adventure",
   "short_name": "NOAH Reading",
-  "description": "500-word English and Filipino reading practice for Noah.",
-  "start_url": "./index.html?pwa=1",
-  "scope": "./",
+  "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#fff8eb",
   "theme_color": "#fff8eb",
-  "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ]
+  "icons": []
 }
